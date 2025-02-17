@@ -1,23 +1,31 @@
-import { Note } from "../models/Note.js";
+import { Note } from '../models/Note.js';
+import { NoteView } from '../views/NoteView.js';
 
 export class NoteController {
-    static createNote(note) {
-        // TODO: Crear una nueva nota
+    constructor() {
+        this.noteModel = new Note();
+        this.noteView = new NoteView();
+
+        // Vincular eventos de la vista con los manejadores del controlador
+        this.noteView.bindAddNote(this.handleAddNote.bind(this));
+        this.noteView.bindDeleteNote(this.handleDeleteNote.bind(this));
+
+        // Cargar notas desde el almacenamiento y mostrarlas en la interfaz
+        this.loadNotes();
     }
 
-    static getNotes() {
-        // TODO: Obtener todas las notas
+    loadNotes() {
+        const notes = this.noteModel.getNotes();
+        this.noteView.displayNotes(notes);
     }
 
-    static getNote(id) {
-        // TODO: Obtener una nota por su id
+    handleAddNote(content) {
+        this.noteModel.addNote(content);
+        this.loadNotes(); // Recargar las notas en la vista
     }
 
-    static updateNote(id, note) {
-        // TODO: Actualizar una nota
-    }
-
-    static deleteNote(id) {
-        // TODO: Eliminar una nota
+    handleDeleteNote(id) {
+        this.noteModel.deleteNote(id);
+        this.loadNotes(); // Recargar las notas en la vista
     }
 }

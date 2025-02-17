@@ -1,2 +1,6 @@
+// app.js
+import { NoteController} from './controllers/noteController.js';
 
-const app = document.getElementById('app');
+document.addEventListener('DOMContentLoaded', () => {
+    new NoteController();
+});
