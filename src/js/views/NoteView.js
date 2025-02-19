@@ -12,7 +12,7 @@ export class NoteView {
         input.type = 'text';
         input.placeholder = 'Escribe una nota...';
         const submitButton = document.createElement('button');
-        submitButton.textContent = 'Agregar Nota';
+        submitButton.textContent = 'Crear Nota';
         form.append(input, submitButton);
 
         form.addEventListener('submit', (event) => {
