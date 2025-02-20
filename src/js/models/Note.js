@@ -1,39 +1,96 @@
 export class Note {
-    id;
-    title;
-    content;
-    createdAt;
+    #id
+    #name
+    #content
+    #favorite
+    #trash
+    #creationDate
+    #modificationDate
 
-    constructor() {
-        this.id = Date.now();
-        this.title = '';
-        this.content = '';
-        this.createdAt = new Date().toLocaleString();
-        
-        this.notes = JSON.parse(localStorage.getItem('notes')) || [];
+    constructor(id = null, name, content, favorite = false, trash = false, creationDate = null, modificationDate = null) {
+        this.id = id ?? `${this.getCurrentDate()}-${name}`; // Mantener ID si ya existe
+        this.name = name;
+        this.content = content;
+        this.favorite = favorite;
+        this.trash = trash;
+        this.creationDate = creationDate ?? this.getCurrentDate(); // Mantener si existe
+        this.modificationDate = modificationDate ?? this.getCurrentDate(); // Mantener si existe
+    }
+    
+    // Método para obtener la fecha actual en formato legible
+    getCurrentDate() {
+        const now = new Date();
+        return now.toISOString().replace("T", " ").substring(0, 19); // Formato: "YYYY-MM-DD HH:mm:ss"
     }
 
-    addNote(content) {
-        const note = { 
-            id: Date.now(), // Genera una ID númerica para cada nota a partir de la fecha actual
-            title,
-            content,
-            createdAt: new Date().toLocaleString(),
-            };
-        this.notes.push(note);
-        this._commit();
+
+    toJSON() {
+        let toJson = {
+            id: this.id,
+            name: this.name,
+            content: this.content,
+            favorite: this.favorite,
+            trash: this.trash,
+            creationDate: this.creationDate,
+            modificationDate: this.modificationDate
+        };
+
+        return toJson;
     }
 
-    deleteNote(id) {
-        this.notes = this.notes.filter(note => note.id !== id);
-        this._commit();
+    set id(id) {
+        this.#id = id;
     }
 
-    getNotes() {
-        return this.notes;
+    get id() {
+        return this.#id;
     }
 
-    _commit() {
-        localStorage.setItem('notes', JSON.stringify(this.notes));
+    set name(name) {
+        this.#name = name;
+    }
+
+    get name() {
+        return this.#name;
+    }
+
+    set content(content) {
+        this.#content = content;
+    }
+
+    get content() {
+        return this.#content;
+    }
+
+    set favorite(favorite) {
+        this.#favorite = favorite;
+    }
+
+    get favorite() {
+        return this.#favorite;
+    }
+
+    set trash(trash) {
+        this.#trash = trash;
+    }
+
+    get trash() {
+        return this.#trash;
+    }
+    
+    set creationDate(creationDate) {
+        this.#creationDate = creationDate;
+    }
+    
+    get creationDate() {
+        return this.#creationDate;
+    }
+    
+    set modificationDate(modificationDate) {
+        this.#modificationDate = modificationDate;
+    }
+    
+    get modificationDate() {
+        return this.#modificationDate;
     }
 }
