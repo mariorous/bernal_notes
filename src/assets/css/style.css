@@ -109,7 +109,15 @@ i {
     align-items: center;
     justify-content: center;
     background-color: var(--red);
-    color: white;
+
+    i {
+        color: white;
+
+        &:hover {
+            font-weight: bold;
+        }
+    }
+    
     &:hover {
         background-color: var(--dark-red);
         transition: all 0.3s ease-in-out;
@@ -224,8 +232,10 @@ nav ul li {
     padding: 15px;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     max-width: 300px;
     transition: transform 0.2s ease-in-out;
+    height: 400px;
 }
 
 .note:hover {
@@ -257,10 +267,8 @@ nav ul li {
 .note-footer {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     font-size: 0.8em;
     color: #888;
-    margin-top: 100px;
 }
 
 .date-div {
@@ -357,4 +365,30 @@ nav ul li {
 .modified-at {
     font-size: 0.8em;
     color: #888;
+}
+
+.date-container {
+    display: flex;
+    gap: 20px;
+}
+
+.note-name {
+    display: flex;
+    align-items: center;
+}
+
+.favorite-button {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+
+    i {
+        color: var(--red);
+        font-size: 1.6em;
+    
+        &:hover {
+            font-weight: bold;
+        }
+    }
 }

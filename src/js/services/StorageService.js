@@ -53,6 +53,30 @@ export class StorageService {
         this.setNotes(notes);
     }
 
+    static trashNote(id) {
+        let notes = this.getNotes();
+        notes = notes.map(note => {
+            if (note.id === id) {
+                note.trash = true;
+                return note;
+            }
+            return note;
+        });
+        this.setNotes(notes);
+    }
+
+    static favoriteNote(id) {
+        let notes = this.getNotes();
+        notes = notes.map(note => {
+            if (note.id === id) {
+                note.favorite = !note.favorite;
+                return note;
+            }
+            return note;
+        });
+        this.setNotes(notes);
+    }
+
     static deleteNote(id) {
         let notes = this.getNotes();
         notes = notes.filter(note => note.id !== id);

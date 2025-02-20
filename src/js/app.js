@@ -2,11 +2,35 @@ import { NoteController } from './controllers/NoteController.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const controller = new NoteController();
+    window.currentSection = 'home';
+
+    document.addEventListener("keydown", function (event) {
+        if (event.ctrlKey && event.key === "k") {
+            event.preventDefault(); // Evita que el navegador abra la búsqueda en la web
+            document.querySelector(".search").focus(); // Enfoca el input
+        }
+    });
+    
 
     const homeButton = document.getElementById('home-button');
     homeButton.addEventListener('click', () => {
+        currentSection = 'home';
         controller.noteView.showNoteList(); // Usa la referencia de la vista desde el controlador
         controller.loadNotes(); // Recarga la lista de notas
+    });
+
+    const trashButton = document.getElementById('trash-button');
+    trashButton.addEventListener('click', () => {
+        currentSection = 'trash';
+        const notes = controller.getNotes();
+        controller.noteView.displayNotes(notes, 'trash');
+    });
+
+    const favoriteButton = document.getElementById('favorite-button');
+    favoriteButton.addEventListener('click', () => {
+        currentSection = 'favorites';
+        const notes = controller.getNotes();
+        controller.noteView.displayNotes(notes, 'favorites');
     });
 });
 
@@ -58,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     {
         id: crypto.randomUUID(),
         name: "Cómo mejorar la productividad",
-        content: "La clave para ser más productivo es gestionar bien el tiempo. Algunas estrategias incluyen la técnica Pomodoro, eliminar distracciones, establecer objetivos diarios y usar herramientas como Notion o Trello para organizar tareas.",
+        content: "La clave para ser más productivo es gestionar bien el tiempo. Algunas estrategias incluyen la técnica Pomodoro, eliminar distracciones y establecer objetivos diarios.",
         favorite: false,
         trash: false,
         creationDate: new Date().toISOString().replace("T", " ").substring(0, 19),
@@ -66,8 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
         id: crypto.randomUUID(),
-        name: "Cómo mejorar la productividad",
-        content: "La clave para ser más productivo es gestionar bien el tiempo. Algunas estrategias incluyen la técnica Pomodoro, eliminar distracciones, establecer objetivos diarios y usar herramientas como Notion o Trello para organizar tareas.",
+        name: "Hábitos para un día exitoso",
+        content: "Levantarse temprano, hacer ejercicio, leer algo nuevo y planificar el día pueden marcar una gran diferencia en la productividad y el bienestar.",
         favorite: false,
         trash: false,
         creationDate: new Date().toISOString().replace("T", " ").substring(0, 19),
@@ -75,8 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
         id: crypto.randomUUID(),
-        name: "Cómo mejorar la productividad",
-        content: "La clave para ser más productivo es gestionar bien el tiempo. Algunas estrategias incluyen la técnica Pomodoro, eliminar distracciones, establecer objetivos diarios y usar herramientas como Notion o Trello para organizar tareas.",
+        name: "Aprendiendo sobre inversiones",
+        content: "Invertir no es solo para expertos. Empezar con educación financiera y conocer instrumentos como ETFs, acciones y fondos de inversión puede ayudar a mejorar nuestras finanzas.",
         favorite: false,
         trash: false,
         creationDate: new Date().toISOString().replace("T", " ").substring(0, 19),
@@ -84,8 +108,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
         id: crypto.randomUUID(),
-        name: "Cómo mejorar la productividad",
-        content: "La clave para ser más productivo es gestionar bien el tiempo. Algunas estrategias incluyen la técnica Pomodoro, eliminar distracciones, establecer objetivos diarios y usar herramientas como Notion o Trello para organizar tareas.",
+        name: "Consejos para mejorar en programación",
+        content: "Practicar todos los días, contribuir a proyectos open source y leer documentación oficial son algunas formas de mejorar como programador.",
         favorite: false,
         trash: false,
         creationDate: new Date().toISOString().replace("T", " ").substring(0, 19),
@@ -93,8 +117,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
         id: crypto.randomUUID(),
-        name: "Cómo mejorar la productividad",
-        content: "La clave para ser más productivo es gestionar bien el tiempo. Algunas estrategias incluyen la técnica Pomodoro, eliminar distracciones, establecer objetivos diarios y usar herramientas como Notion o Trello para organizar tareas.",
+        name: "Beneficios del ejercicio diario",
+        content: "Hacer ejercicio regularmente ayuda a mejorar la salud física y mental, aumentando la energía y reduciendo el estrés.",
         favorite: false,
         trash: false,
         creationDate: new Date().toISOString().replace("T", " ").substring(0, 19),
@@ -102,8 +126,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
         id: crypto.randomUUID(),
-        name: "Cómo mejorar la productividad",
-        content: "La clave para ser más productivo es gestionar bien el tiempo. Algunas estrategias incluyen la técnica Pomodoro, eliminar distracciones, establecer objetivos diarios y usar herramientas como Notion o Trello para organizar tareas.",
+        name: "Libros recomendados este año",
+        content: "Algunos libros recomendados incluyen 'Atomic Habits', 'Deep Work' y 'El poder del ahora'. Todos ofrecen valiosas lecciones para el desarrollo personal y profesional.",
         favorite: false,
         trash: false,
         creationDate: new Date().toISOString().replace("T", " ").substring(0, 19),
@@ -111,8 +135,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
         id: crypto.randomUUID(),
-        name: "Cómo mejorar la productividad",
-        content: "La clave para ser más productivo es gestionar bien el tiempo. Algunas estrategias incluyen la técnica Pomodoro, eliminar distracciones, establecer objetivos diarios y usar herramientas como Notion o Trello para organizar tareas.",
+        name: "Cocinando platos saludables",
+        content: "Incluir más verduras, proteínas magras y evitar los azúcares añadidos es clave para una alimentación balanceada.",
         favorite: false,
         trash: false,
         creationDate: new Date().toISOString().replace("T", " ").substring(0, 19),
@@ -120,8 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
         id: crypto.randomUUID(),
-        name: "Cómo mejorar la productividad",
-        content: "La clave para ser más productivo es gestionar bien el tiempo. Algunas estrategias incluyen la técnica Pomodoro, eliminar distracciones, establecer objetivos diarios y usar herramientas como Notion o Trello para organizar tareas.",
+        name: "Viajes que quiero hacer",
+        content: "Me gustaría viajar a Japón, Noruega y Perú. Cada destino tiene algo especial que me llama la atención, desde su cultura hasta su naturaleza.",
         favorite: false,
         trash: false,
         creationDate: new Date().toISOString().replace("T", " ").substring(0, 19),
@@ -129,8 +153,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
         id: crypto.randomUUID(),
-        name: "Cómo mejorar la productividad",
-        content: "La clave para ser más productivo es gestionar bien el tiempo. Algunas estrategias incluyen la técnica Pomodoro, eliminar distracciones, establecer objetivos diarios y usar herramientas como Notion o Trello para organizar tareas.",
+        name: "Cómo organizar mejor mi día",
+        content: "Utilizar un planificador, establecer prioridades y hacer descansos programados ayuda a mantener un buen balance entre trabajo y vida personal.",
         favorite: false,
         trash: false,
         creationDate: new Date().toISOString().replace("T", " ").substring(0, 19),
@@ -138,8 +162,8 @@ document.addEventListener('DOMContentLoaded', () => {
     },
     {
         id: crypto.randomUUID(),
-        name: "Cómo mejorar la productividad",
-        content: "La clave para ser más productivo es gestionar bien el tiempo. Algunas estrategias incluyen la técnica Pomodoro, eliminar distracciones, establecer objetivos diarios y usar herramientas como Notion o Trello para organizar tareas.",
+        name: "Aprendiendo un nuevo idioma",
+        content: "Aprender un idioma requiere constancia. Usar aplicaciones, practicar con hablantes nativos y ver contenido en el idioma puede acelerar el proceso.",
         favorite: false,
         trash: false,
         creationDate: new Date().toISOString().replace("T", " ").substring(0, 19),

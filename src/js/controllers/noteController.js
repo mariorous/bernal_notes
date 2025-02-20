@@ -15,6 +15,10 @@ export class NoteController {
         this.noteView.displayNotes(notes);
     }
 
+    getNotes() {
+        return StorageService.getNotes();
+    }
+
     saveNotes() {
         const notes = StorageService.getNotes();
         localStorage.setItem('notes', JSON.stringify(notes));

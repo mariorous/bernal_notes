@@ -77,13 +77,30 @@ export class NoteView {
         textarea.style.height = `${textarea.scrollHeight}px`; // Ajustar a la altura del contenido
     }
 
-    displayNotes(notes) {
+    displayNotes(notes, category) {
         this.noteList.innerHTML = '';
-    
-        notes.forEach(note => {
+        
+        let notesToShow;
+
+        switch(category) {
+            case 'favorites':
+                notesToShow = notes.filter(note => note.favorite === true);
+                break;
+            case 'trash':
+                notesToShow = notes.filter(note => note.trash === true);
+                break;
+            default:
+                notesToShow = notes.filter(note => note.trash === false);
+                break;
+        }
+        
+        notesToShow.forEach(note => {
             const noteContainer = document.createElement('div');
             noteContainer.classList.add('note');
             noteContainer.setAttribute('data-id', note.id); // Agregar un atributo de ID para referencia
+
+            const cardPreview = document.createElement('div');
+            cardPreview.classList.add('card-preview');
 
             // Título
             const nameDiv = document.createElement('div');
@@ -95,10 +112,11 @@ export class NoteView {
             contentDiv.classList.add('note-content');
             contentDiv.textContent = note.content;
 
+            
             // Fechas
             const footerDiv = document.createElement('div');
             footerDiv.classList.add('note-footer');
-
+            
             const dateDiv = document.createElement('div');
             dateDiv.classList.add('date-div');
             const created = document.createElement('span');
@@ -107,7 +125,19 @@ export class NoteView {
             const modified = document.createElement('span');
             modified.textContent = `✏️ Last updated: ${note.modificationDate}`;
             dateDiv.append(modified);
-
+            
+            const favoriteButton = document.createElement('button');
+            favoriteButton.classList.add('favorite-button');
+            if (note.favorite) {
+                favoriteButton.innerHTML = '<i class="fa-solid fa-heart"></i>';
+            } else {
+                favoriteButton.innerHTML = '<i class="fa-regular fa-heart"></i>';
+            }
+            favoriteButton.addEventListener('click', (event) => {
+                event.stopPropagation(); // Evitar que el clic en el botón se propague
+                this.onFavoriteNote(note.id);
+            });
+            
             // Botón de eliminar
             const deleteButton = document.createElement('button');
             deleteButton.classList.add('delete-button');
@@ -116,9 +146,11 @@ export class NoteView {
                 event.stopPropagation(); // Evitar que el clic en el botón se propague
                 this.onDeleteNote(note.id);
             });
-
+            
+            nameDiv.append(favoriteButton);
+            cardPreview.append(nameDiv, contentDiv);
             footerDiv.append(dateDiv, deleteButton);
-            noteContainer.append(nameDiv, contentDiv, footerDiv);
+            noteContainer.append(cardPreview, footerDiv);
             this.noteList.append(noteContainer);
 
             // Agregar evento para abrir la nota completa al hacer clic en la nota
@@ -158,7 +190,37 @@ export class NoteView {
     }
 
     onDeleteNote(id) {
-        console.log('Borrando nota con ID:', id);
-        StorageService.deleteNote(id);
+        if (confirm('¿Estás seguro de que quieres borrar esta nota?')) {
+            const notes = StorageService.getNotes();
+            const noteToDelete = notes.find(note => note.id === id);
+            
+            if (noteToDelete.trash === true) {
+                StorageService.deleteNote(id);
+                this.displayNotes(StorageService.getNotes(),'trash');
+            } else {
+                if (noteToDelete.favorite) {
+                    if (confirm('Estas eliminando una nota favorita, ¿estás seguro?')) {
+                        StorageService.favoriteNote(id);
+                        StorageService.trashNote(id);
+                        this.displayNotes(StorageService.getNotes());
+                    }
+                } else {
+                    StorageService.trashNote(id);
+                    this.displayNotes(StorageService.getNotes());
+                }
+                
+            }
+            
+        }
     };
+
+    onFavoriteNote(id) {
+        const notes = StorageService.getNotes();
+        const noteToFavorite = notes.find(note => note.id === id);
+
+        if (!noteToFavorite.trash) {
+            StorageService.favoriteNote(id);
+            this.displayNotes(StorageService.getNotes());
+        }
+    }
 }
