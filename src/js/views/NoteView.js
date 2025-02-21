@@ -7,6 +7,10 @@ export class NoteView {
         this.noteList = this._createNoteList();
         this.fullNoteView = this._createFullNoteView(); // Contenedor para la nota completa
         this.app.append(this.welcome, this.noteList, this.fullNoteView);
+
+        // Creamos versiones vinculadas de los manejadores
+        this.titleInputHandler = this.handleTitleInput.bind(this);
+        this.contentInputHandler = this.handleContentInput.bind(this);
     }
 
     _createNoteList() {
@@ -177,47 +181,58 @@ export class NoteView {
         });
     }
 
-    showFullNoteView(note) {
-        // Mostrar el contenedor de la nota completa
-        this.fullNoteView.style.display = 'block';
-        this.noteList.style.display = 'none'; // Ocultar la lista de notas
+    handleTitleInput(event) {
+        const notes = StorageService.getNotes();
+        const noteId = this.currentNoteId;
         
-        // Cargar datos de la nota en los inputs
-        this.fullNoteView.querySelector('.full-note-title').value = note.name;
-        this.fullNoteView.querySelector('.full-note-content').value = note.content;
+        notes.forEach(note => {
+            if (note.id === noteId) {
+                note.name = event.target.value;
+                StorageService.editNote(note);
+            }
+        });
+    }
+
+    handleContentInput(event) {
+        const notes = StorageService.getNotes();
+        const noteId = this.currentNoteId;
+        
+        notes.forEach(note => {
+            if (note.id === noteId) {
+                note.content = event.target.value;
+                StorageService.editNote(note);
+            }
+        });
+    }
+
+    showFullNoteView(note) {
+        // Guardamos el ID de la nota actual
+        this.currentNoteId = note.id;
+        
+        // Mostramos/ocultamos los elementos apropiados
+        this.fullNoteView.style.display = 'block';
+        this.noteList.style.display = 'none';
+        
+        // Obtenemos los elementos de input
+        const titleInput = this.fullNoteView.querySelector('.full-note-title');
+        const contentInput = this.fullNoteView.querySelector('.full-note-content');
+        
+        // Eliminamos los listeners existentes antes de añadir nuevos
+        titleInput.removeEventListener('input', this.titleInputHandler);
+        contentInput.removeEventListener('input', this.contentInputHandler);
+        
+        // Establecemos los valores
+        titleInput.value = note.name;
+        contentInput.value = note.content;
         this.fullNoteView.querySelector('.created-at').textContent = `📅 Created at: ${note.creationDate}`;
         this.fullNoteView.querySelector('.modified-at').textContent = `✏️ Last updated: ${note.modificationDate}`;
 
-        // Ajustar altura del textarea
-        this.adjustTextareaHeight(this.fullNoteView.querySelector('.full-note-content'));
-
-        // Guardar automáticamente al escribir
-        this.fullNoteView.querySelector('.full-note-title').addEventListener('input', () => {
-            const notes = StorageService.getNotes();
-            console.log(notes);
-
-            const exists = notes.some(n => n.id === note.id); // Verifica si la nota ya existe
-
-            if (!exists) {
-                StorageService.addNote(note); // Solo agrega si NO existe
-                console.log('Añadir nota:', note);
-            } else {
-                notes.forEach(n => {
-                    if (n.id === note.id) {
-                        n.name = this.fullNoteView.querySelector('.full-note-title').value;
-                        StorageService.editNote(n);
-                        console.log('Editar nota:', n);
-                    }     
-                });
-            }
-
-        });
+        // Ajustamos la altura del textarea
+        this.adjustTextareaHeight(contentInput);
         
-        this.fullNoteView.querySelector('.full-note-content').addEventListener('input', () => {
-            note.content = this.fullNoteView.querySelector('.full-note-content').value;
-            StorageService.editNote(note);
-            console.log('Editar nota:', note);
-        });
+        // Añadimos los nuevos listeners
+        titleInput.addEventListener('input', this.titleInputHandler);
+        contentInput.addEventListener('input', this.contentInputHandler);
     }
 
     showNoteList() {
