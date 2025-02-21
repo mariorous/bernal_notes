@@ -8,7 +8,7 @@ export class Note {
     #modificationDate
 
     constructor(id = null, name, content, favorite = false, trash = false, creationDate = null, modificationDate = null) {
-        this.id = id ?? `${this.getCurrentDate()}-${name}`; // Mantener ID si ya existe
+        this.id = id ?? crypto.randomUUID(); // Mantener ID si ya existe, si no generar uno nuevo
         this.name = name;
         this.content = content;
         this.favorite = favorite;

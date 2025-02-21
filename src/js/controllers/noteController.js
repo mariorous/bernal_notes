@@ -10,6 +10,10 @@ export class NoteController {
         this.loadNotes();
     }
 
+    newNote() {
+        this.noteView.showFullNoteView();
+    }
+
     loadNotes() {
         const notes = StorageService.getNotes();
         this.noteView.displayNotes(notes);

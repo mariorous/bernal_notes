@@ -93,6 +93,21 @@ document.addEventListener('DOMContentLoaded', () => {
             controller.noteView.displayNotes(notes, 'favorites');
         });
 
+        const search = document.querySelector('.search');
+        search.addEventListener('input', () => {
+            const notes = controller.getNotes();
+            const filteredNotes = notes.filter(note => note.name.toLowerCase().includes(search.value.toLowerCase()));
+            controller.noteView.displayNotes(filteredNotes, currentSection);
+        });
+
+        const addNoteButton = document.getElementById('add-note-button');
+        addNoteButton.addEventListener('click', () => {
+            controller.newNote();
+            document.querySelector('.full-note-title').placeholder = 'New Note';
+            document.querySelector('.full-note-content').placeholder = 'Start writing here...';
+            document.querySelector('.full-note-title').focus();
+        });
+
         document.getElementById("logout-btn").addEventListener("click", () => {
             auth.logout();
             renderLogin();
