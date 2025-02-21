@@ -11,7 +11,10 @@ export class NoteController {
     }
 
     newNote() {
-        this.noteView.showFullNoteView();
+        const note = new Note();
+        note.name = '';
+        note.content = '';
+        this.noteView.showFullNoteView(note);
     }
 
     loadNotes() {

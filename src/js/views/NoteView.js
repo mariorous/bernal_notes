@@ -77,7 +77,7 @@ export class NoteView {
         textarea.style.height = `${textarea.scrollHeight}px`; // Ajustar a la altura del contenido
     }
 
-    displayNotes(notes, category) {
+    displayNotes(notes, category, search) {
         this.noteList.innerHTML = '';
         
         let notesToShow;
@@ -93,6 +93,25 @@ export class NoteView {
                 notesToShow = notes.filter(note => note.trash === false);
                 break;
         }
+
+        if (notesToShow.length === 0) {
+            const noNotes = document.createElement('div');
+            noNotes.classList.add('no-notes');
+        
+            const icon = document.createElement('i');
+            icon.classList.add('fa', 'fa-sticky-note'); // Icono de FontAwesome
+        
+            const message = document.createElement('p');
+            message.textContent = 'No notes found';
+            
+            const advice = document.createElement('span');
+            advice.textContent = 'Try using a diferent keyword or filter.';
+        
+            noNotes.append(icon, message, advice);
+            this.noteList.append(noNotes);
+            return;
+        }
+        
         
         notesToShow.forEach(note => {
             const noteContainer = document.createElement('div');
@@ -174,13 +193,30 @@ export class NoteView {
 
         // Guardar automáticamente al escribir
         this.fullNoteView.querySelector('.full-note-title').addEventListener('input', () => {
-            note.name = this.fullNoteView.querySelector('.full-note-title').value;
-            StorageService.editNote(note);
+            const notes = StorageService.getNotes();
+            console.log(notes);
+
+            const exists = notes.some(n => n.id === note.id); // Verifica si la nota ya existe
+
+            if (!exists) {
+                StorageService.addNote(note); // Solo agrega si NO existe
+                console.log('Añadir nota:', note);
+            } else {
+                notes.forEach(n => {
+                    if (n.id === note.id) {
+                        n.name = this.fullNoteView.querySelector('.full-note-title').value;
+                        StorageService.editNote(n);
+                        console.log('Editar nota:', n);
+                    }     
+                });
+            }
+
         });
         
         this.fullNoteView.querySelector('.full-note-content').addEventListener('input', () => {
             note.content = this.fullNoteView.querySelector('.full-note-content').value;
             StorageService.editNote(note);
+            console.log('Editar nota:', note);
         });
     }
 
