@@ -1,38 +1,108 @@
 import { NoteController } from './controllers/NoteController.js';
+import { Auth } from './services/Auth.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    const controller = new NoteController();
-    window.currentSection = 'home';
+    const auth = new Auth();
+    const app = document.getElementById("app");
 
-    document.addEventListener("keydown", function (event) {
-        if (event.ctrlKey && event.key === "k") {
-            event.preventDefault(); // Evita que el navegador abra la búsqueda en la web
-            document.querySelector(".search").focus(); // Enfoca el input
-        }
-    });
-    
+    function renderLogin() {
+        app.innerHTML = `
+            <div class="auth-container">
+                <form>
+                    <h2>Login</h2>
+                    <input type="text" id="login-username" placeholder="Usuario" />
+                    <input type="password" id="login-password" placeholder="Contraseña" />
+                    <button id="login-btn">Iniciar sesión</button>
+                    <p>No tienes cuenta? <a href="#" id="go-register">Regístrate</a></p>
+                </form>
+            </div>
+        `;
+        document.querySelector('.sidebar').style.display = 'none';
 
-    const homeButton = document.getElementById('home-button');
-    homeButton.addEventListener('click', () => {
-        currentSection = 'home';
-        controller.noteView.showNoteList(); // Usa la referencia de la vista desde el controlador
-        controller.loadNotes(); // Recarga la lista de notas
-    });
+        document.getElementById("login-btn").addEventListener("click", () => {
+            const username = document.getElementById("login-username").value;
+            const password = document.getElementById("login-password").value;
+            if (auth.login(username, password)) {
+                document.querySelector('.auth-container').style.display = 'none';
+                renderApp();
+            } else {
+                alert("Usuario o contraseña incorrectos");
+            }
+        });
 
-    const trashButton = document.getElementById('trash-button');
-    trashButton.addEventListener('click', () => {
-        currentSection = 'trash';
-        const notes = controller.getNotes();
-        controller.noteView.displayNotes(notes, 'trash');
-    });
+        document.getElementById("go-register").addEventListener("click", renderRegister);
+    }
 
-    const favoriteButton = document.getElementById('favorite-button');
-    favoriteButton.addEventListener('click', () => {
-        currentSection = 'favorites';
-        const notes = controller.getNotes();
-        controller.noteView.displayNotes(notes, 'favorites');
-    });
+    function renderRegister() {
+        app.innerHTML = `
+            <div class="auth-container">
+                <form>
+                    <h2>Registro</h2>
+                    <input type="text" id="register-username" placeholder="Usuario" />
+                    <input type="password" id="register-password" placeholder="Contraseña" />
+                    <button id="register-btn">Registrarse</button>
+                    <p>Ya tienes cuenta? <a href="#" id="go-login">Inicia sesión</a></p>
+                </form>
+            </div>
+        `;
+
+        document.getElementById("register-btn").addEventListener("click", () => {
+            const username = document.getElementById("register-username").value;
+            const password = document.getElementById("register-password").value;
+            const message = auth.register(username, password);
+            alert(message);
+            if (message.includes("exitoso")) renderLogin();
+        });
+
+        document.getElementById("go-login").addEventListener("click", renderLogin);
+    }
+
+    function renderApp() {
+        document.querySelector('.sidebar').style.display = 'flex';
+        
+
+        const controller = new NoteController();
+        window.currentSection = 'home';
+
+        document.addEventListener("keydown", function (event) {
+            if (event.ctrlKey && event.key === "k") {
+                event.preventDefault(); // Evita que el navegador abra la búsqueda en la web
+                document.querySelector(".search").focus(); // Enfoca el input
+            }
+        });
+        
+
+        const homeButton = document.getElementById('home-button');
+        homeButton.addEventListener('click', () => {
+            currentSection = 'home';
+            controller.noteView.showNoteList(); // Usa la referencia de la vista desde el controlador
+            controller.loadNotes(); // Recarga la lista de notas
+        });
+
+        const trashButton = document.getElementById('trash-button');
+        trashButton.addEventListener('click', () => {
+            currentSection = 'trash';
+            const notes = controller.getNotes();
+            controller.noteView.displayNotes(notes, 'trash');
+        });
+
+        const favoriteButton = document.getElementById('favorite-button');
+        favoriteButton.addEventListener('click', () => {
+            currentSection = 'favorites';
+            const notes = controller.getNotes();
+            controller.noteView.displayNotes(notes, 'favorites');
+        });
+
+        document.getElementById("logout-btn").addEventListener("click", () => {
+            auth.logout();
+            renderLogin();
+        });
+    }
+
+    auth.isAuthenticated() ? renderApp() : renderLogin();
 });
+
+
 
 
 

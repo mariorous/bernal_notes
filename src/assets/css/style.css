@@ -7,11 +7,14 @@
     --red: #f83a3a;
     --dark-red: #c72a2a;
 }
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 #app {
@@ -74,6 +77,22 @@ i {
     color: #8a8a8a;
 }
 
+#logout-btn {
+    background-color: var(--red);
+    margin-left: 20px;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    &:hover {
+        background-color: var(--dark-red);
+        transition: all 0.3s ease-in-out;
+    }
+}
+
 .search {
     padding: 10px;
     font-size: 0.9rem;
@@ -97,6 +116,7 @@ i {
     width: 100%;
     background-color: var(--green);
     color: white;
+    transition: background 0.3s ease-in-out;
     &:hover {
         background-color: var(--dark-green);
         transition: all 0.3s ease-in-out;
@@ -109,6 +129,7 @@ i {
     align-items: center;
     justify-content: center;
     background-color: var(--red);
+    transition: background 0.3s ease-in-out;
 
     i {
         color: white;
@@ -117,7 +138,7 @@ i {
             font-weight: bold;
         }
     }
-    
+
     &:hover {
         background-color: var(--dark-red);
         transition: all 0.3s ease-in-out;
@@ -130,6 +151,8 @@ i {
     align-items: center;
     justify-content: center;
     background-color: var(--gray);
+    transition: background 0.3s ease-in-out;
+
     &:hover {
         background-color: var(--dark-gray-2);
         transition: all 0.3s ease-in-out;
@@ -168,6 +191,8 @@ nav ul li {
     align-items: center;
     gap: 10px;
     margin-bottom: 15px;
+    transition: background 0.3s ease-in-out;
+
 
     &:hover {
         background-color: var(--gray);
@@ -191,6 +216,7 @@ nav ul li {
     & a {
         text-decoration: none;
         color: var(--green);
+        transition: color 0.3s ease-in-out;
 
         &:hover {
             color: var(--dark-green);
@@ -219,7 +245,7 @@ nav ul li {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 50px;
+    gap: 40px;
     margin-top: 50px;
     height: 100vh;
     overflow: auto;
@@ -233,7 +259,7 @@ nav ul li {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    max-width: 300px;
+    max-width: 320px;
     transition: transform 0.2s ease-in-out;
     height: 400px;
 }
@@ -309,22 +335,6 @@ nav ul li {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     align-items: stretch; /* Asegura que los elementos no sobresalgan */
     border-radius: 10px;
-
-    button {
-        background-color: #333;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        font-size: 16px;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background 0.3s ease-in-out;
-        margin-top: 20px;
-        &:hover {
-            background-color: var(--dark-gray-2);
-            transition: all 0.3s ease-in-out;
-        }
-    }
 }
 
 .full-note-title {
