@@ -185,59 +185,76 @@ export class NoteView {
         const notes = StorageService.getNotes();
         const noteId = this.currentNoteId;
         
-        notes.forEach(note => {
-            if (note.id === noteId) {
-                note.name = event.target.value;
-                StorageService.editNote(note);
-            }
-        });
+        const foundNote = notes.find(note => note.id === noteId);
+        if (foundNote) {
+            foundNote.name = event.target.value;
+            foundNote.modificationDate = new Date().toISOString().replace("T", " ").substring(0, 19);
+            StorageService.editNote(foundNote);
+        }
     }
 
     handleContentInput(event) {
         const notes = StorageService.getNotes();
         const noteId = this.currentNoteId;
         
-        notes.forEach(note => {
-            if (note.id === noteId) {
-                note.content = event.target.value;
-                StorageService.editNote(note);
-            }
-        });
+        const foundNote = notes.find(note => note.id === noteId);
+        if (foundNote) {
+            foundNote.content = event.target.value;
+            foundNote.modificationDate = new Date().toISOString().replace("T", " ").substring(0, 19);
+            StorageService.editNote(foundNote);
+        }
     }
 
     showFullNoteView(note) {
-        // Guardamos el ID de la nota actual
         this.currentNoteId = note.id;
-        
-        // Mostramos/ocultamos los elementos apropiados
         this.fullNoteView.style.display = 'block';
         this.noteList.style.display = 'none';
+        this.welcome.style.display = 'none';
         
-        // Obtenemos los elementos de input
         const titleInput = this.fullNoteView.querySelector('.full-note-title');
         const contentInput = this.fullNoteView.querySelector('.full-note-content');
         
-        // Eliminamos los listeners existentes antes de añadir nuevos
+        // Eliminar listeners existentes
         titleInput.removeEventListener('input', this.titleInputHandler);
         contentInput.removeEventListener('input', this.contentInputHandler);
         
-        // Establecemos los valores
-        titleInput.value = note.name;
-        contentInput.value = note.content;
+        // Establecer valores y placeholders
+        titleInput.value = note.name || '';
+        contentInput.value = note.content || '';
+        titleInput.placeholder = 'New Note';
+        contentInput.placeholder = 'Start writing here...';
+        
+        // Actualizar fechas
         this.fullNoteView.querySelector('.created-at').textContent = `📅 Created at: ${note.creationDate}`;
         this.fullNoteView.querySelector('.modified-at').textContent = `✏️ Last updated: ${note.modificationDate}`;
 
-        // Ajustamos la altura del textarea
+        // Ajustar altura
         this.adjustTextareaHeight(contentInput);
         
-        // Añadimos los nuevos listeners
+        // Añadir nuevos listeners
         titleInput.addEventListener('input', this.titleInputHandler);
         contentInput.addEventListener('input', this.contentInputHandler);
+        
+        // Añadir botón para volver a la lista si no existe
+        if (!this.backButton) {
+            this.backButton = document.createElement('button');
+            this.backButton.classList.add('back-button');
+            this.backButton.innerHTML = '<i class="fa-solid fa-arrow-left"></i> Volver';
+            this.backButton.addEventListener('click', () => {
+                this.showNoteList();
+            });
+            this.fullNoteView.insertBefore(this.backButton, this.fullNoteView.firstChild);
+        }
+
+        // Enfocar el título automáticamente
+        titleInput.focus();
     }
 
     showNoteList() {
-        this.fullNoteView.style.display = 'none'; // Ocultar la nota completa
-        this.noteList.style.display = 'flex'; // Mostrar la lista de notas
+        this.fullNoteView.style.display = 'none';
+        this.noteList.style.display = 'flex';
+        this.welcome.style.display = 'block';
+        this.displayNotes(StorageService.getNotes());
     }
 
     onDeleteNote(id) {

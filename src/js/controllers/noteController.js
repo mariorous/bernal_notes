@@ -5,16 +5,26 @@ import { StorageService } from '../services/StorageService.js';
 export class NoteController {
     constructor() {
         this.noteView = new NoteView();
-
-        // Cargar notas desde el almacenamiento y mostrarlas en la interfaz
         this.loadNotes();
     }
 
     newNote() {
-        const note = new Note();
-        note.name = '';
-        note.content = '';
+        // Crear nueva nota con valores iniciales
+        const note = new Note(
+            null,  // id será generado automáticamente
+            '',    // nombre vacío
+            '',    // contenido vacío
+            false, // no favorita
+            false  // no en papelera
+        );
+        
+        // Mostrar la nota para edición
         this.noteView.showFullNoteView(note);
+        
+        // Guardar la nota en el storage
+        StorageService.addNote(note);
+        
+        return note;
     }
 
     loadNotes() {
@@ -24,10 +34,5 @@ export class NoteController {
 
     getNotes() {
         return StorageService.getNotes();
-    }
-
-    saveNotes() {
-        const notes = StorageService.getNotes();
-        localStorage.setItem('notes', JSON.stringify(notes));
     }
 }
