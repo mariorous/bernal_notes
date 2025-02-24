@@ -25,7 +25,9 @@ export class NoteView {
         const welcomeText = document.createElement('span');
         welcomeText.textContent = 'Ready to start taking notes?';
         const welcomeTitle = document.createElement('h1');
-        welcomeTitle.textContent = 'Bernal\'s Home';
+        let user = localStorage.getItem('loggedUser');
+        user = user.charAt(0).toLocaleUpperCase() + user.slice(1); // Convertir a mayúscula la primera letra del usuario
+        welcomeTitle.textContent = `${user}'s Home`;
         welcome.append(welcomeText, welcomeTitle);
 
         return welcome;

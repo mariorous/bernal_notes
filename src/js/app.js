@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderLogin() {
         app.innerHTML = `
             <div class="auth-container">
-                <form>
+                <form id="login-form">
                     <h2>Login</h2>
                     <input type="text" id="login-username" placeholder="Usuario" />
                     <input type="password" id="login-password" placeholder="Contraseña" />
@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         document.querySelector('.sidebar').style.display = 'none';
 
-        document.getElementById("login-btn").addEventListener("click", () => {
+        document.getElementById("login-form").addEventListener("submit", (event) => {
+            event.preventDefault(); // Evitar que se envíe el formulario
             const username = document.getElementById("login-username").value;
             const password = document.getElementById("login-password").value;
             if (auth.login(username, password)) {
@@ -36,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderRegister() {
         app.innerHTML = `
             <div class="auth-container">
-                <form>
+                <form id="register-form">
                     <h2>Registro</h2>
                     <input type="text" id="register-username" placeholder="Usuario" />
                     <input type="password" id="register-password" placeholder="Contraseña" />
@@ -46,7 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
 
-        document.getElementById("register-btn").addEventListener("click", () => {
+        document.getElementById("register-form").addEventListener("submit", (event) => {
+            event.preventDefault(); // Evitar que se envíe el formulario
             const username = document.getElementById("register-username").value;
             const password = document.getElementById("register-password").value;
             const message = auth.register(username, password);
@@ -67,7 +69,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener("keydown", function (event) {
             if (event.ctrlKey && event.key === "k") {
                 event.preventDefault(); // Evita que el navegador abra la búsqueda en la web
-                document.querySelector(".search").focus(); // Enfoca el input
+                
+                // Se usa un setTimeout para mantener activo Ctrl + K, evitando que el listener se pierda al editar o crear notas.
+                setTimeout(() => {  // Pequeña espera en caso de que la UI esté cambiando
+                    const searchInput = document.querySelector(".search");
+                    if (searchInput) {
+                        searchInput.focus(); // Enfoca solo si el input existe en el DOM
+                    }
+                }, 50);
             }
         });
         
