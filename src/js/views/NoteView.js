@@ -145,10 +145,10 @@ export class NoteView {
             const dateDiv = document.createElement('div');
             dateDiv.classList.add('date-div');
             const created = document.createElement('span');
-            created.textContent = `📅 Created at: ${note.creationDate}`;
+            created.textContent = `📅 Created: ${note.creationDate}`;
             dateDiv.append(created);
             const modified = document.createElement('span');
-            modified.textContent = `✏️ Last updated: ${note.modificationDate}`;
+            modified.textContent = `✏️ Updated: ${note.modificationDate}`;
             dateDiv.append(modified);
             
             const favoriteButton = document.createElement('button');

@@ -259,7 +259,7 @@ nav ul li {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    max-width: 320px;
+    width: 320px;
     transition: transform 0.2s ease-in-out;
     height: 400px;
 }

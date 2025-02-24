@@ -142,8 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.addEventListener("keydown", function (event) {
             if (event.ctrlKey && event.key === "k") {
-                event.preventDefault(); // Evita que el navegador abra la búsqueda en la web
-                
                 // Se usa un setTimeout para mantener activo Ctrl + K, evitando que el listener se pierda al editar o crear notas.
                 setTimeout(() => {  // Pequeña espera en caso de que la UI esté cambiando
                     const searchInput = document.querySelector(".search");
