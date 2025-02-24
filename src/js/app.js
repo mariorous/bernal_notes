@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h2>Login</h2>
                     <input type="text" id="login-username" placeholder="Usuario" />
                     <input type="password" id="login-password" placeholder="Contraseña" />
+                    <div id="login-errors"></div>
                     <button id="login-btn">Iniciar sesión</button>
                     <p>No tienes cuenta? <a href="#" id="go-register">Regístrate</a></p>
                 </form>
@@ -21,15 +22,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById("login-form").addEventListener("submit", (event) => {
             event.preventDefault(); // Evitar que se envíe el formulario
-            const username = document.getElementById("login-username").value;
-            const password = document.getElementById("login-password").value;
+        
+            const usernameInput = document.getElementById("login-username");
+            const passwordInput = document.getElementById("login-password");
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+            let errors = [];
+        
+            // Validación del nombre de usuario
+            if (username === "") {
+                errors.push("El nombre de usuario no puede estar vacío.");
+                usernameInput.classList.add("input-error");
+            } else {
+                usernameInput.classList.remove("input-error");
+            }
+        
+            // Validación de la contraseña
+            if (password === "") {
+                errors.push("La contraseña no puede estar vacía.");
+                passwordInput.classList.add("input-error");
+            } else {
+                passwordInput.classList.remove("input-error");
+            }
+        
+            // Mostrar errores si hay alguno
+            const errorContainer = document.getElementById("login-errors");
+            errorContainer.innerHTML = ""; // Limpiar mensajes previos
+            if (errors.length > 0) {
+                errors.forEach(error => {
+                    const errorElement = document.createElement("p");
+                    errorElement.textContent = error;
+                    errorElement.classList.add("error-message");
+                    errorContainer.appendChild(errorElement);
+                });
+                return;
+            }
+        
+            // Intentar iniciar sesión
             if (auth.login(username, password)) {
                 document.querySelector('.auth-container').style.display = 'none';
                 renderApp();
             } else {
-                alert("Usuario o contraseña incorrectos");
+                errorContainer.innerHTML = "<p class='error-message'>Usuario o contraseña incorrectos.</p>";
             }
         });
+        
 
         document.getElementById("go-register").addEventListener("click", renderRegister);
     }
@@ -41,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h2>Registro</h2>
                     <input type="text" id="register-username" placeholder="Usuario" />
                     <input type="password" id="register-password" placeholder="Contraseña" />
+                    <div id="register-errors"></div>
                     <button id="register-btn">Registrarse</button>
                     <p>Ya tienes cuenta? <a href="#" id="go-login">Inicia sesión</a></p>
                 </form>
@@ -49,12 +87,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById("register-form").addEventListener("submit", (event) => {
             event.preventDefault(); // Evitar que se envíe el formulario
-            const username = document.getElementById("register-username").value;
-            const password = document.getElementById("register-password").value;
+        
+            const usernameInput = document.getElementById("register-username");
+            const passwordInput = document.getElementById("register-password");
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+            let errors = [];
+        
+            // Validación del nombre de usuario
+            if (username === "") {
+                errors.push("El nombre de usuario no puede estar vacío.");
+                usernameInput.classList.add("input-error");
+            } else {
+                usernameInput.classList.remove("input-error");
+            }
+        
+            // Validación de la contraseña
+            if (password.length < 6) {
+                errors.push("La contraseña debe tener al menos 6 caracteres.");
+                passwordInput.classList.add("input-error");
+            } else {
+                passwordInput.classList.remove("input-error");
+            }
+        
+            // Mostrar errores si hay alguno
+            const errorContainer = document.getElementById("register-errors");
+            errorContainer.innerHTML = ""; // Limpiar mensajes previos
+            if (errors.length > 0) {
+                errors.forEach(error => {
+                    const errorElement = document.createElement("p");
+                    errorElement.textContent = error;
+                    errorElement.classList.add("error-message");
+                    errorContainer.appendChild(errorElement);
+                });
+                return;
+            }
+        
+            // Si no hay errores, proceder con el registro
             const message = auth.register(username, password);
             alert(message);
             if (message.includes("exitoso")) renderLogin();
         });
+        
 
         document.getElementById("go-login").addEventListener("click", renderLogin);
     }

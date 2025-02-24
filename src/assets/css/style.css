@@ -440,3 +440,18 @@ nav ul li {
 .no-notes span {
     font-size: 16px;
 }
+
+.input-error {
+    border: 2px solid red;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin: 5px 0;
+}
+
+#login-errors, #register-errors {
+    margin-bottom: 20px;
+}
+
