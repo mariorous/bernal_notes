@@ -20,7 +20,7 @@ body {
 #app {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    max-height: 100%;
 }
 
 .container {
@@ -30,6 +30,7 @@ body {
 .content {
     flex: 1; /* Toma el resto del espacio disponible */
     padding: 20px; /* Espaciado interno */
+    height: 100vh;
 }
 
 i {
