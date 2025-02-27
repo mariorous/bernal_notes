@@ -29,7 +29,7 @@ export class NoteController {
 
     loadNotes() {
         const notes = StorageService.getNotes();
-        this.noteView.displayNotes(notes);
+        this.noteView.displayNotes(notes, window.currentSection);
     }
 
     getNotes() {

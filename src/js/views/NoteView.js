@@ -275,7 +275,7 @@ updateNoteStatus(target, field) {
         this.fullNoteView.style.display = 'none';
         this.noteList.style.display = 'flex';
         this.welcome.style.display = 'block';
-        this.displayNotes(StorageService.getNotes());
+        this.displayNotes(StorageService.getNotes(), window.currentSection);
     }
 
     onDeleteNote(id) {
@@ -285,17 +285,17 @@ updateNoteStatus(target, field) {
             
             if (noteToDelete.trash === true) {
                 StorageService.deleteNote(id);
-                this.displayNotes(StorageService.getNotes(),'trash');
+                this.displayNotes(StorageService.getNotes(), 'trash');
             } else {
                 if (noteToDelete.favorite) {
                     if (confirm('Estas eliminando una nota favorita, ¿estás seguro?')) {
                         StorageService.favoriteNote(id);
                         StorageService.trashNote(id);
-                        this.displayNotes(StorageService.getNotes());
+                        this.displayNotes(StorageService.getNotes(), window.currentSection);
                     }
                 } else {
                     StorageService.trashNote(id);
-                    this.displayNotes(StorageService.getNotes());
+                    this.displayNotes(StorageService.getNotes(), window.currentSection);
                 }
                 
             }
@@ -309,7 +309,7 @@ updateNoteStatus(target, field) {
 
         if (!noteToFavorite.trash) {
             StorageService.favoriteNote(id);
-            this.displayNotes(StorageService.getNotes());
+            this.displayNotes(StorageService.getNotes(), window.currentSection);
         }
     }
 }
