@@ -49,6 +49,7 @@ export class NoteView {
         // Contenedor de fechas alineado a la derecha
         const dateContainer = document.createElement('div');
         dateContainer.classList.add('date-container');
+
         
         const createdAt = document.createElement('span');
         createdAt.classList.add('created-at');
@@ -184,28 +185,34 @@ export class NoteView {
     }
 
     handleTitleInput(event) {
-        const notes = StorageService.getNotes();
-        const noteId = this.currentNoteId;
-        
-        const foundNote = notes.find(note => note.id === noteId);
-        if (foundNote) {
-            foundNote.name = event.target.value;
-            foundNote.modificationDate = new Date().toISOString().replace("T", " ").substring(0, 19);
-            StorageService.editNote(foundNote);
-        }
-    }
+    this.updateNoteStatus(event.target, 'name');
+}
 
-    handleContentInput(event) {
-        const notes = StorageService.getNotes();
-        const noteId = this.currentNoteId;
-        
-        const foundNote = notes.find(note => note.id === noteId);
-        if (foundNote) {
-            foundNote.content = event.target.value;
-            foundNote.modificationDate = new Date().toISOString().replace("T", " ").substring(0, 19);
-            StorageService.editNote(foundNote);
-        }
+handleContentInput(event) {
+    this.updateNoteStatus(event.target, 'content');
+}
+
+updateNoteStatus(target, field) {
+    clearTimeout(this.saveTimeout); // Reinicia el temporizador
+
+    const noteId = this.currentNoteId;
+    const notes = StorageService.getNotes();
+    const foundNote = notes.find(note => note.id === noteId);
+
+    if (foundNote) {
+        foundNote[field] = target.value;
+        foundNote.modificationDate = new Date().toISOString().replace("T", " ").substring(0, 19);
+        StorageService.editNote(foundNote);
+
+        const statusIndicator = this.fullNoteView.querySelector('.save-status');
+        statusIndicator.innerHTML = '<span class="loading-dot"></span> Saving';
+
+        // Esperar 2 segundos antes de cambiar a "Guardado"
+        this.saveTimeout = setTimeout(() => {
+            statusIndicator.innerHTML = '✅ Saved';
+        }, 1000);
     }
+}
 
     showFullNoteView(note) {
         this.currentNoteId = note.id;
@@ -229,7 +236,7 @@ export class NoteView {
         // Actualizar fechas
         this.fullNoteView.querySelector('.created-at').textContent = `📅 Created at: ${note.creationDate}`;
         this.fullNoteView.querySelector('.modified-at').textContent = `✏️ Last updated: ${note.modificationDate}`;
-
+    
         // Ajustar altura
         this.adjustTextareaHeight(contentInput);
         
@@ -237,20 +244,32 @@ export class NoteView {
         titleInput.addEventListener('input', this.titleInputHandler);
         contentInput.addEventListener('input', this.contentInputHandler);
         
-        // Añadir botón para volver a la lista si no existe
-        if (!this.backButton) {
+        // Añadir contenedor superior si no existe
+        if (!this.headerContainer) {
+            this.headerContainer = document.createElement('div');
+            this.headerContainer.classList.add('header-container');
+            
             this.backButton = document.createElement('button');
             this.backButton.classList.add('back-button');
             this.backButton.innerHTML = '<i class="fa-solid fa-arrow-left"></i> Volver';
             this.backButton.addEventListener('click', () => {
                 this.showNoteList();
             });
-            this.fullNoteView.insertBefore(this.backButton, this.fullNoteView.firstChild);
+    
+            this.statusIndicator = document.createElement('span');
+            this.statusIndicator.classList.add('save-status');
+            this.statusIndicator.innerHTML = '✅ Saved';
+            
+            this.headerContainer.appendChild(this.backButton);
+            this.headerContainer.appendChild(this.statusIndicator);
+            
+            this.fullNoteView.insertBefore(this.headerContainer, this.fullNoteView.firstChild);
         }
-
+    
         // Enfocar el título automáticamente
         titleInput.focus();
     }
+    
 
     showNoteList() {
         this.fullNoteView.style.display = 'none';
