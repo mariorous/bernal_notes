@@ -5,16 +5,18 @@ export class StorageService {
 
     // Añade las notas al localStorage con su clave 'notes'
     static setNotes(notes) {
-        this.#storage.setItem('notes', JSON.stringify(notes)); // Convierte a JSON aquí
+        const user = this.#storage.getItem('loggedUser');
+        this.#storage.setItem(`notes-${user}`, JSON.stringify(notes));
     }    
 
     static getNotes() {
+        const user = this.#storage.getItem('loggedUser');
         // Verificar si existe 'items' en el localStorage
-        const notesFromStorage = JSON.parse(this.#storage.getItem('notes')) || [];
+        const notesFromStorage = JSON.parse(this.#storage.getItem(`notes-${user}`)) || [];
 
         // Si el localStorage está vacío, inicializarlo como un arreglo vacío
         if (!notesFromStorage.length) {
-            this.#storage.setItem('notes', JSON.stringify([]));
+            this.#storage.setItem(`notes-${user}`, JSON.stringify([]));
         }
         // Convierte los objetos a instancias
         const notes = notesFromStorage.map(noteData => {

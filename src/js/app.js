@@ -338,7 +338,78 @@ document.addEventListener('DOMContentLoaded', () => {
 ];
 
 // Guardar en localStorage
-localStorage.setItem("notes", JSON.stringify(sampleNotes));
+localStorage.setItem("notes-mario", JSON.stringify(sampleNotes));
 
 console.log("Notas de ejemplo guardadas en localStorage.");
+ */
+
+/* const sampleNotesJoan = [
+    {
+        id: crypto.randomUUID(),
+        name: "Mis proyectos personales",
+        content: "Estoy trabajando en una aplicación móvil para gestionar hábitos y una web de portafolio para mostrar mis trabajos.",
+        favorite: true,
+        trash: false,
+        creationDate: new Date().toISOString().replace("T", " ").substring(0, 19),
+        modificationDate: new Date().toISOString().replace("T", " ").substring(0, 19)
+    },
+    {
+        id: crypto.randomUUID(),
+        name: "Recetas saludables",
+        content: "Quiero probar recetas como la ensalada de quinoa, batidos verdes y tacos de pescado.",
+        favorite: false,
+        trash: false,
+        creationDate: new Date().toISOString().replace("T", " ").substring(0, 19),
+        modificationDate: new Date().toISOString().replace("T", " ").substring(0, 19)
+    }
+];
+
+const sampleNotesDiego = [
+    {
+        id: crypto.randomUUID(),
+        name: "Aprendiendo Python",
+        content: "Python es un lenguaje versátil que quiero dominar. Me enfocaré en automatización y análisis de datos.",
+        favorite: false,
+        trash: false,
+        creationDate: new Date().toISOString().replace("T", " ").substring(0, 19),
+        modificationDate: new Date().toISOString().replace("T", " ").substring(0, 19)
+    },
+    {
+        id: crypto.randomUUID(),
+        name: "Mejorando mi setup",
+        content: "Estoy buscando un nuevo monitor ultra-wide y un teclado mecánico para mejorar mi productividad.",
+        favorite: true,
+        trash: false,
+        creationDate: new Date().toISOString().replace("T", " ").substring(0, 19),
+        modificationDate: new Date().toISOString().replace("T", " ").substring(0, 19)
+    }
+];
+
+const sampleNotesAdmin = [
+    {
+        id: crypto.randomUUID(),
+        name: "Tareas pendientes",
+        content: "Actualizar la base de datos de usuarios, optimizar el rendimiento del servidor y revisar logs de errores.",
+        favorite: false,
+        trash: false,
+        creationDate: new Date().toISOString().replace("T", " ").substring(0, 19),
+        modificationDate: new Date().toISOString().replace("T", " ").substring(0, 19)
+    },
+    {
+        id: crypto.randomUUID(),
+        name: "Mejoras en la seguridad",
+        content: "Implementar autenticación en dos pasos y mejorar la encriptación de datos sensibles.",
+        favorite: true,
+        trash: false,
+        creationDate: new Date().toISOString().replace("T", " ").substring(0, 19),
+        modificationDate: new Date().toISOString().replace("T", " ").substring(0, 19)
+    }
+];
+
+// Guardar en localStorage
+localStorage.setItem("notes-joan", JSON.stringify(sampleNotesJoan));
+localStorage.setItem("notes-diego", JSON.stringify(sampleNotesDiego));
+localStorage.setItem("notes-admin", JSON.stringify(sampleNotesAdmin));
+
+console.log("Notas guardadas para Joan, Diego y Admin en localStorage.");
  */
