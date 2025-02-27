@@ -49,10 +49,16 @@ i {
     align-items: stretch; /* Asegura que los elementos no sobresalgan */
 }
 
+.user-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .user-info {
     display: flex;
     align-items: center;
-    padding: 20px;
+    padding: 20px 0px;
 }
 
 .user-text {
@@ -87,6 +93,7 @@ i {
     font-size: 16px;
     border-radius: 5px;
     cursor: pointer;
+    height: 45px;
     transition: background 0.3s ease-in-out;
     &:hover {
         background-color: var(--dark-red);
@@ -125,7 +132,7 @@ i {
 }
 
 .buttons button:nth-child(2) {
-    width: 20%;
+    width: 23%;
     display: flex;
     align-items: center;
     justify-content: center;
